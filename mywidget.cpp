@@ -29,13 +29,21 @@ MyWidget::MyWidget(QWidget *parent) : QWidget(parent)
 
     // 第二行控件
     line2Layout = new QHBoxLayout;
+    rectSelector = new RectSelector;
+    line2Layout->addWidget(rectSelector);
+
 
     // 第三行控件
     line3Layout = new QHBoxLayout;
 
+    // 第三行控件
+    line4Layout = new QHBoxLayout;
+
+
     mainLayout->addLayout(line1Layout);
     mainLayout->addLayout(line2Layout);
     mainLayout->addLayout(line3Layout);
+    mainLayout->addLayout(line4Layout);
     setLayout(mainLayout);
 }
 
@@ -62,7 +70,7 @@ void MyWidget::load() {
             movie->jumpToFrame(i);
             label->setPixmap(movie->currentPixmap().scaledToWidth(100));
             originLabels.append(label);
-            line2Layout->addWidget(label);
+            line3Layout->addWidget(label);
         }
     }
 
@@ -70,7 +78,7 @@ void MyWidget::load() {
         for(int i = 0 ; i < this->frameCount ;i++) {
             auto label = new QLabel;
             targetLabels.append(label);
-            line3Layout->addWidget(label);
+            line4Layout->addWidget(label);
         }
     }
 

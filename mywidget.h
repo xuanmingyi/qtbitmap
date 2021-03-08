@@ -11,6 +11,7 @@
 
 #include <QMovie>
 #include <QVector>
+#include "rectselector.h"
 
 
 class MyWidget : public QWidget
@@ -26,6 +27,7 @@ private:
     QHBoxLayout *line1Layout;
     QHBoxLayout *line2Layout;
     QHBoxLayout *line3Layout;
+    QHBoxLayout *line4Layout;
 
     QLineEdit *filePathLineedit;
     QLineEdit *outputDictLineedit;
@@ -36,6 +38,8 @@ private:
     int frameCount;
     QVector<QLabel*> originLabels;
     QVector<QLabel*> targetLabels;
+
+    RectSelector *rectSelector;
 
 public slots:
     void selectFilePath();
