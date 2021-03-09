@@ -5,6 +5,16 @@
 #include <QSpinBox>
 #include <QSlider>
 #include <QGridLayout>
+#include <QVector>
+#include <QLabel>
+#include <QPixmap>
+#include <QDebug>
+#include <QVector>
+
+
+enum SelectorPosition {
+    X, Y, Width, Height, Max
+};
 
 
 class RectSelector : public QWidget
@@ -13,23 +23,25 @@ class RectSelector : public QWidget
 public:
     explicit RectSelector(QWidget *parent = nullptr);
 
+    void SetImage(QPixmap image);
+
+    QRect GetSize();
+
+public slots:
+    void changed();
+
 signals:
 
 private:
-    int x, y;
-    int width, height;
-
-    QSpinBox *xSpinBox;
-    QSpinBox *ySpinBox;
-    QSpinBox *widthSpinBox;
-    QSpinBox *heightSpinBox;
-
-    QSlider *xSlider;
-    QSlider *ySlider;
-    QSlider *widthSlider;
-    QSlider *heightSlider;
-
     QGridLayout *mainLayout;
+
+    QVector<QSpinBox*> spinBoxes;
+    QVector<QSlider*> sliders;
+
+    QPixmap rawImage;
+
+    QLabel *raw;
+    QLabel *preview;
 };
 
 #endif // RECTSELECTOR_H

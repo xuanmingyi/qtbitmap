@@ -2,13 +2,13 @@
 #define MYWIDGET_H
 
 #include <QWidget>
-#include <QVBoxLayout>
+#include <QGridLayout>
 #include <QPushButton>
 #include <QLabel>
 #include <QLineEdit>
 #include <QFileDialog>
 #include <QDebug>
-
+#include <QScrollArea>
 #include <QMovie>
 #include <QVector>
 #include "rectselector.h"
@@ -22,12 +22,7 @@ public:
 
 signals:
 private:
-    QVBoxLayout *mainLayout;
-
-    QHBoxLayout *line1Layout;
-    QHBoxLayout *line2Layout;
-    QHBoxLayout *line3Layout;
-    QHBoxLayout *line4Layout;
+    QGridLayout *mainLayout;
 
     QLineEdit *filePathLineedit;
     QLineEdit *outputDictLineedit;
@@ -36,6 +31,9 @@ private:
     QString outputDict;
 
     int frameCount;
+    QVector<QImage> images;
+    QGridLayout *originContent;
+    QGridLayout *targetContent;
     QVector<QLabel*> originLabels;
     QVector<QLabel*> targetLabels;
 
@@ -46,6 +44,7 @@ public slots:
     void selectOutputDict();
 
     void load();
+    void generate();
 };
 
 #endif // MYWIDGET_H

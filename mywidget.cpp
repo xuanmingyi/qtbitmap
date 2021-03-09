@@ -2,10 +2,9 @@
 
 MyWidget::MyWidget(QWidget *parent) : QWidget(parent)
 {
-    mainLayout = new QVBoxLayout;
+    mainLayout = new QGridLayout;
 
     // 第一行控件
-    line1Layout = new QHBoxLayout;
 
     QPushButton *btn1 = new QPushButton("选择文件");
     QPushButton *btn2 = new QPushButton("选择目录");
@@ -16,34 +15,36 @@ MyWidget::MyWidget(QWidget *parent) : QWidget(parent)
     filePathLineedit->setDisabled(true);
     outputDictLineedit->setDisabled(true);
 
-    line1Layout->addWidget(btn1);
-    line1Layout->addWidget(filePathLineedit);
-    line1Layout->addWidget(btn2);
-    line1Layout->addWidget(outputDictLineedit);
-    line1Layout->addWidget(btn3);
-
+    mainLayout->addWidget(btn1, 0, 0);
+    mainLayout->addWidget(filePathLineedit, 0, 1);
+    mainLayout->addWidget(btn2, 0, 2);
+    mainLayout->addWidget(outputDictLineedit, 0, 3);
+    mainLayout->addWidget(btn3, 0, 4);
 
     connect(btn1, SIGNAL(clicked()), this, SLOT(selectFilePath()));
     connect(btn2, SIGNAL(clicked()), this, SLOT(selectOutputDict()));
     connect(btn3, SIGNAL(clicked()), this, SLOT(load()));
 
     // 第二行控件
-    line2Layout = new QHBoxLayout;
     rectSelector = new RectSelector;
-    line2Layout->addWidget(rectSelector);
+    mainLayout->addWidget(rectSelector, 1, 0);
 
+    QPushButton *btn4 = new QPushButton("生成");
+    connect(btn4, SIGNAL(clicked()), this, SLOT(generate()));
+    mainLayout->addWidget(btn4, 1, 1);
 
     // 第三行控件
-    line3Layout = new QHBoxLayout;
+    QScrollArea *originArea = new QScrollArea;
+    originContent = new QGridLayout;
+    originArea->setLayout(originContent);
+    mainLayout->addWidget(originArea, 2, 0, 1, -1);
 
-    // 第三行控件
-    line4Layout = new QHBoxLayout;
+    // 第四行控件
+    QScrollArea *targetArea = new QScrollArea;
+    targetContent = new QGridLayout;
+    targetArea->setLayout(targetContent);
+    mainLayout->addWidget(targetArea, 3, 0, 1, -1);
 
-
-    mainLayout->addLayout(line1Layout);
-    mainLayout->addLayout(line2Layout);
-    mainLayout->addLayout(line3Layout);
-    mainLayout->addLayout(line4Layout);
     setLayout(mainLayout);
 }
 
@@ -68,9 +69,10 @@ void MyWidget::load() {
         for(int i = 0 ; i < this->frameCount ; i++) {
             auto label = new QLabel;
             movie->jumpToFrame(i);
+            images.append(movie->currentImage());
             label->setPixmap(movie->currentPixmap().scaledToWidth(100));
             originLabels.append(label);
-            line3Layout->addWidget(label);
+            originContent->addWidget(label, i / 8, i % 8);
         }
     }
 
@@ -78,11 +80,17 @@ void MyWidget::load() {
         for(int i = 0 ; i < this->frameCount ;i++) {
             auto label = new QLabel;
             targetLabels.append(label);
-            line4Layout->addWidget(label);
         }
     }
 
+    movie->jumpToFrame(0);
+    rectSelector->SetImage(movie->currentPixmap());
+}
 
 
-    qDebug() << this->filePath << endl;
+void MyWidget::generate() {
+    qDebug() << rectSelector->GetSize() << endl;
+    for(int i = 0 ; i < images.length() ; i++) {
+        images[i].copy(rectSelector->GetSize()).save(QString("%1.png").arg(i));
+    }
 }
